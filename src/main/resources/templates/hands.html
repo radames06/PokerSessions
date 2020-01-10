@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>List of hands</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-10"><h1 class="card-title">Hands</h1></div>
+                        <div class="col-md-2">
+                            <a class="btn btn-primary" href="#" th:href="@{'/'}" role="button">Liste des sessions</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p th:text="'Session id : ' + ${pokersession.id}">th_id</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p th:text="'date : ' + ${pokersession.date}">th_date</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p th:text="'owner: ' + ${pokersession.owner}">th_owner</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p th:text="'room : ' + ${pokersession.room}">th_room</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p th:text="'Nb paires floppées : ' + ${pokersession.nbFlopPairs()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbFlopPairs())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                            <p th:text="'Nb top paires : ' + ${pokersession.nbFlopTopPairs()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbFlopTopPairs())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                            <p th:text="'Nb pocket paires : ' + ${pokersession.nbPocketPairs()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbPocketPairs())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                            <p th:text="'Nb overpaires : ' + ${pokersession.nbFlopOverPairs()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbFlopOverPairs())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                            <p th:text="'Nb doubles paires : ' + ${pokersession.nbFlopDoublePairs()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbFlopDoublePairs())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p th:text="'Nb pocket sets : ' + ${pokersession.nbFlopPocketSets()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbFlopPocketSets())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                            <p th:text="'Nb board sets : ' + ${pokersession.nbFlopBoardSets()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbFlopBoardSets())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                            <p>-</p>
+                            <p th:text="'Nb total HH : ' + ${pokersession.getNbHands()}"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p th:text="'Nb Flop flush : ' + ${pokersession.nbFlopFlush()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbFlopFlush())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                            <p th:text="'Nb Pocket flush draws : ' + ${pokersession.nbFlopPocketFlushDraws()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbFlopPocketFlushDraws())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                            <p th:text="'Nb Board flush draws : ' + ${pokersession.nbFlopBoardFlushDraws()}
+                                + ' (' + ${#numbers.formatDecimal((0.0 + pokersession.nbFlopBoardFlushDraws())/pokersession.getNbHands()*100,1,2)} + '%)'"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive" th:if="${not #lists.isEmpty(pokersession.sessionHands)}">
+                            <table class="table table-hover">
+                                <thead class="thead-inverse">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Holecards</th>
+                                    <th>Board</th>
+                                    <th>Flop pair</th>
+                                    <th>Top pair</th>
+                                    <th>Pocket pair</th>
+                                    <th>Overpair</th>
+                                    <th>Pocket Set</th>
+                                    <th>Flop Set</th>
+                                    <th>Flop flush</th>
+                                    <th>Pocket FD</th>
+                                    <th>Board FD</th>
+                                </tr>
+                                </thead>
+                                <tr th:each="hand : ${pokersession.sessionHands}">
+                                    <td th:text="${hand.handDate}">123</td>
+                                    <td th:text="${hand.handTime}">abc</td>
+                                    <td th:text="${hand.H1} + ' ' + ${hand.H2}"></td>
+                                    <td>
+                                        <span th:if="${hand.sawFlop}" th:text="${hand.B1} + ' ' + ${hand.B2} + ' ' + ${hand.B3} + ' - '"></span>
+                                        <span th:if="${hand.sawTurn}" th:text="${hand.B4} + ' - '"></span>
+                                        <span th:if="${hand.sawRiver}" th:text="${hand.B5}"></span>
+                                    </td>
+                                    <td><span th:if="${hand.flopPair().size()!=0}" th:text="${hand.flopPair().size()}">X</span></td>
+                                    <td><span th:if="${hand.flopTopPair()}">X</span></td>
+                                    <td><span th:if="${hand.pocketPair()}">X</span></td>
+                                    <td><span th:if="${hand.flopOverPair()}">X</span></td>
+                                    <td><span th:if="${hand.flopPocketSet()!=null}">X</span></td>
+                                    <td><span th:if="${hand.flopBoardSet()}!=null">X</span></td>
+                                    <td><span th:if="${hand.flopFlush()}">X</span></td>
+                                    <td><span th:if="${hand.flopPocketFlushDraw()}">X</span></td>
+                                    <td><span th:if="${hand.flopBoardFlushDraw()}">X</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+</body>
+</html>
